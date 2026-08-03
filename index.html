@@ -37,12 +37,10 @@
     </div>
 
     <script>
-        // رابط الـ Google Apps Script الخاص بك
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzfXoTdvST-GjKi772pzV7dUNSo7DKndEAogFAZGkyhtzpwVMOh4-Xdw-qLqLC8UOvY/exec"; 
 
         let customerData = null;
 
-        // قراءة الـ ID من اللينك
         const urlParams = new URLSearchParams(window.location.search);
         const customerId = urlParams.get('id');
 
@@ -52,6 +50,7 @@
                 .then(data => {
                     if (data && !data.error) {
                         customerData = data;
+                        console.log("Fetched Data:", customerData); // لطباعة البيانات في الكونسول للتأكد
                     } else {
                         console.error("Gift details not found!");
                     }
@@ -59,15 +58,31 @@
                 .catch(err => console.error("Error fetching data:", err));
         }
 
+        // دالة لتنظيف وصياغة التاريخ لمنع أي اختلاف في الفورمات
+        function cleanDate(str) {
+            if (!str) return "";
+            // تحويل صيغة التاريخ المرجعة من جوجل لو كانت ISO String
+            if (str.includes("T")) {
+                str = str.split("T")[0];
+            }
+            // إزالة أي مسافات وأصفار على الشمال في الأرقام
+            return str.toString().trim().replace(/^0+/, '').replace(/\/-0+/g, '/').replace(/-0+/g, '-');
+        }
+
         function checkPasscode() {
             const inputDate = document.getElementById('passcode').value.trim();
+            const errorMsg = document.getElementById('error-msg');
             
             if (!customerData) {
-                document.getElementById('error-msg').innerText = "Loading data, please try again in a moment...";
+                errorMsg.innerText = "Loading data... Please wait 2 seconds and try again.";
                 return;
             }
 
-            if (inputDate === customerData.date) {
+            // مقارنة التاريخ المدخل مع التاريخ الجاي من الشيت بعد التنظيف
+            const formattedInput = cleanDate(inputDate);
+            const formattedBackend = cleanDate(customerData.date);
+
+            if (formattedInput === formattedBackend || inputDate === customerData.date) {
                 document.getElementById('lock-screen').classList.add('hidden');
                 document.getElementById('gift-content').classList.remove('hidden');
 
@@ -89,7 +104,7 @@
                     audio.classList.remove('hidden');
                 }
             } else {
-                document.getElementById('error-msg').innerText = "Incorrect date. Please try again.";
+                errorMsg.innerText = "Incorrect date. Please try again.";
             }
         }
     </script>
