@@ -1,0 +1,739 @@
+/* ==========================================================================
+   SILVERA QR GIFT EXPERIENCE — LUXURY STYLESHEET
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties
+   -------------------------------------------------------------------------- */
+:root {
+  --bg-dark: #2C1810;
+  --bg-medium: #3D2B1F;
+  --bg-deep: #1A0E0A;
+  --bg-gradient: linear-gradient(145deg, #2C1810 0%, #3D2B1F 40%, #1A0E0A 100%);
+
+  --surface: #F5E6D3;
+  --surface-light: #FFF8F0;
+  --surface-glass: rgba(245, 230, 211, 0.07);
+  --surface-glass-hover: rgba(245, 230, 211, 0.12);
+
+  --text-light: #F5E6D3;
+  --text-muted: rgba(245, 230, 211, 0.55);
+  --text-primary: #1A0E0A;
+
+  --accent: #C9A96E;
+  --accent-shimmer: #B76E79;
+  --silver: #C0C0C0;
+  --silver-bright: #E8E8E8;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 40px;
+
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text-light);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-shimmer); }
+
+/* --------------------------------------------------------------------------
+   3. Keyframe Animations
+   -------------------------------------------------------------------------- */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+@keyframes reveal-cascade {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(201, 169, 110, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(201, 169, 110, 0.4); }
+}
+
+@keyframes unlock-shackle {
+  0% { d: path("M20 28V20C20 13.4 25.4 8 32 8C38.6 8 44 13.4 44 20V28"); }
+  100% { d: path("M20 28V20C20 13.4 25.4 8 32 8C38.6 8 44 13.4 44 20V14"); }
+}
+
+/* --------------------------------------------------------------------------
+   4. Canvas (Particles)
+   -------------------------------------------------------------------------- */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. App Container & Screen System
+   -------------------------------------------------------------------------- */
+.app-container {
+  position: relative;
+  z-index: 1;
+}
+
+.screen {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.screen.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+  position: relative;
+  z-index: 10;
+}
+
+.screen-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   6. Brand Name
+   -------------------------------------------------------------------------- */
+.brand-name {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  /* Silver Shimmer Effect */
+  background: linear-gradient(
+    100deg,
+    var(--surface-light) 0%,
+    var(--silver) 25%,
+    var(--silver-bright) 50%,
+    var(--silver) 75%,
+    var(--surface-light) 100%
+  );
+  background-size: 250% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+.brand-name--small {
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  margin-bottom: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. Splash Screen
+   -------------------------------------------------------------------------- */
+.tagline {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  margin-bottom: 3rem;
+  letter-spacing: 0.04em;
+  animation: float 5s ease-in-out infinite;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.loading-state.hidden {
+  display: none;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 2.5px solid var(--surface-glass);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.loading-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   8. Primary Button
+   -------------------------------------------------------------------------- */
+.btn-primary {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent-shimmer));
+  color: var(--surface-light);
+  padding: 1.1rem 3.5rem;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(201, 169, 110, 0.25);
+  transition: all 0.35s var(--ease-out);
+  margin-top: 1.5rem;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+  animation: shimmer-sweep 3.5s ease-in-out infinite;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 35px rgba(201, 169, 110, 0.45);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   9. Unlock Screen
+   -------------------------------------------------------------------------- */
+.lock-icon {
+  width: 72px;
+  height: 72px;
+  color: var(--surface);
+  margin-bottom: 2rem;
+  transition: all 0.6s var(--ease-spring);
+  animation: float 4s ease-in-out infinite;
+}
+
+.lock-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lock-icon.unlocked {
+  color: var(--accent);
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 20px rgba(201, 169, 110, 0.5));
+  animation: none;
+}
+
+.screen-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.03em;
+}
+
+.screen-subtext {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.03em;
+}
+
+#unlock-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 0.75rem;
+  margin: 2rem 0 1rem;
+  width: 100%;
+  max-width: 380px;
+}
+
+.date-select {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  border-radius: var(--radius-md);
+  padding: 0.95rem 0.5rem;
+  color: var(--text-light);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A96E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  padding-right: 2rem;
+}
+
+.date-select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12);
+  background-color: var(--surface-glass-hover);
+}
+
+.date-select option {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  padding: 0.5rem;
+}
+
+.error-msg {
+  color: var(--accent-shimmer);
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.error-msg.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.attempts-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-height: 1em;
+  margin-top: 0.25rem;
+}
+
+.shake {
+  animation: shake 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   10. Reveal Screen
+   -------------------------------------------------------------------------- */
+.reveal-inner {
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.reveal-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.reveal-heading-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 5vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--surface-light);
+}
+
+/* Message Box */
+.message-box {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 169, 110, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  max-width: 580px;
+  width: 100%;
+  margin-bottom: 2.5rem;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.message-box::before,
+.message-box::after {
+  content: '\201C';
+  position: absolute;
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  color: var(--accent);
+  opacity: 0.25;
+  line-height: 1;
+}
+
+.message-box::before {
+  top: 0.8rem;
+  left: 1rem;
+}
+
+.message-box::after {
+  content: '\201D';
+  bottom: 0rem;
+  right: 1.2rem;
+}
+
+.message-text {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.15rem);
+  line-height: 1.9;
+  color: var(--text-light);
+  min-height: 1.5em;
+}
+
+.typewriter-cursor::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.75s infinite;
+}
+
+/* Photo Gallery */
+.gallery-section {
+  width: 100%;
+  margin-bottom: 2.5rem;
+}
+
+.photo-gallery {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.5rem 0 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+.photo-item {
+  flex: 0 0 260px;
+  scroll-snap-align: center;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.4s var(--ease-out);
+}
+
+.photo-item:hover {
+  transform: translateY(-4px);
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.photo-item:hover img {
+  transform: scale(1.06);
+}
+
+/* Media Containers */
+.media-container {
+  max-width: 520px;
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.media-container iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: none;
+  display: block;
+}
+
+/* Footer */
+.reveal-footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(245, 230, 211, 0.08);
+  width: 100%;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.brand-accent {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   11. Lightbox
+   -------------------------------------------------------------------------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 3, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.lightbox.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  transform: scale(0.95);
+  transition: transform 0.35s var(--ease-out);
+}
+
+.lightbox.active img {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  color: var(--surface);
+  font-size: 2.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 10;
+}
+
+.lightbox-close:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* --------------------------------------------------------------------------
+   12. Error Screen
+   -------------------------------------------------------------------------- */
+.error-icon {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.error-screen-text {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.error-screen-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   13. Reveal Cascade Animation
+   -------------------------------------------------------------------------- */
+.reveal-animate {
+  opacity: 0;
+}
+
+.reveal-animate.visible {
+  animation: reveal-cascade 0.8s var(--ease-out) forwards;
+}
+
+/* Stagger delays set by JS via style attribute */
+
+/* --------------------------------------------------------------------------
+   14. Utility
+   -------------------------------------------------------------------------- */
+.hidden {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   15. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .screen {
+    padding: 1.5rem 1rem;
+  }
+
+  .date-inputs {
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 260px;
+  }
+
+  .date-select {
+    width: 100%;
+    padding: 0.85rem 0.5rem;
+  }
+
+  .photo-item {
+    flex: 0 0 220px;
+  }
+
+  .message-box {
+    padding: 1.8rem 1.3rem;
+  }
+
+  .message-box::before,
+  .message-box::after {
+    font-size: 2.5rem;
+  }
+
+  .btn-primary {
+    padding: 1rem 2.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .photo-item {
+    flex: 0 0 300px;
+  }
+
+  .message-box {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .reveal-inner {
+    max-width: 800px;
+  }
+}
