@@ -2,149 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Silvera — Your Special Gift</title>
-    <meta name="description" content="A precious gift awaits you. Open it with your special date.">
-
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Silvera — Your Special Gift">
-    <meta property="og:description" content="A precious gift awaits you. Open it with your special date.">
-    <meta property="og:type" content="website">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silvera - Precious Gift</title>
+    <!-- ربط ملف الـ CSS -->
     <link rel="stylesheet" href="index.css">
+    <!-- خطوط براند Silvera -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Particle Canvas Background -->
-    <canvas id="particles-canvas"></canvas>
 
-    <main class="app-container">
+    <div class="container">
+        <h1 class="brand-title">Silvera</h1>
+        <p class="subtitle">Someone left something precious for you</p>
 
-        <!-- ============================================================
-             SCREEN 1: SPLASH (Landing)
-             ============================================================ -->
-        <section id="splash" class="screen active">
-            <div class="screen-inner">
-                <h1 class="brand-name">Silvera</h1>
-                <p class="tagline">Someone left something precious for you</p>
+        <!-- شاشة قفل التاريخ -->
+        <div id="lock-screen" class="card">
+            <p>Enter the special date to unlock your gift</p>
+            <input type="text" id="passcode" placeholder="e.g. 06/06/2025">
+            <button onclick="checkPasscode()">Unlock Experience</button>
+            <p id="error-msg" class="error"></p>
+        </div>
 
-                <div id="loading-state" class="loading-state">
-                    <div class="spinner"></div>
-                    <p class="loading-text">Preparing your gift...</p>
-                </div>
-
-                <button id="btn-open" class="btn-primary" style="display:none;">
-                    Open Your Gift
-                </button>
+        <!-- محتوى الهدية -->
+        <div id="gift-content" class="card hidden">
+            <h2 id="custom-message"></h2>
+            
+            <div class="media-container">
+                <img id="img1" src="" alt="Memory 1" class="hidden">
+                <img id="img2" src="" alt="Memory 2" class="hidden">
             </div>
-        </section>
 
-        <!-- ============================================================
-             SCREEN 2: UNLOCK (Date Entry)
-             ============================================================ -->
-        <section id="unlock" class="screen">
-            <div class="screen-inner">
-                <!-- Lock Icon (SVG) -->
-                <div id="lock-icon" class="lock-icon">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="12" y="28" width="40" height="30" rx="6" stroke="currentColor" stroke-width="2.5" fill="none"/>
-                        <path id="lock-shackle" d="M20 28V20C20 13.4 25.4 8 32 8C38.6 8 44 13.4 44 20V28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                        <circle cx="32" cy="42" r="4" fill="currentColor"/>
-                        <line x1="32" y1="46" x2="32" y2="52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </div>
-
-                <h2 class="screen-heading">Enter your special date</h2>
-                <p class="screen-subtext">The date that means everything to both of you</p>
-
-                <form id="unlock-form">
-                    <div class="date-inputs">
-                        <select id="select-day" class="date-select" required>
-                            <option value="" disabled selected>Day</option>
-                        </select>
-                        <select id="select-month" class="date-select" required>
-                            <option value="" disabled selected>Month</option>
-                        </select>
-                        <select id="select-year" class="date-select" required>
-                            <option value="" disabled selected>Year</option>
-                        </select>
-                    </div>
-
-                    <p id="unlock-error" class="error-msg"></p>
-                    <p id="unlock-attempts" class="attempts-text"></p>
-
-                    <button type="submit" id="btn-unlock" class="btn-primary">Unlock</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- ============================================================
-             SCREEN 3: REVEAL (The Surprise)
-             ============================================================ -->
-        <section id="reveal" class="screen">
-            <div class="screen-inner reveal-inner">
-                <header class="reveal-header reveal-animate">
-                    <h2 id="reveal-heading" class="reveal-heading-text">From — to —</h2>
-                </header>
-
-                <div id="message-box" class="message-box reveal-animate">
-                    <p id="message-text" class="message-text"></p>
-                </div>
-
-                <div id="gallery-section" class="gallery-section reveal-animate" style="display:none;">
-                    <div id="photo-gallery" class="photo-gallery">
-                        <!-- Photos injected by JS -->
-                    </div>
-                </div>
-
-                <div id="music-section" class="media-container reveal-animate" style="display:none;">
-                    <!-- Music iframe injected by JS -->
-                </div>
-
-                <div id="video-section" class="media-container reveal-animate" style="display:none;">
-                    <!-- Video iframe injected by JS -->
-                </div>
-
-                <footer class="reveal-footer reveal-animate">
-                    <p>Crafted with love · <span class="brand-accent">Silvera</span></p>
-                </footer>
-            </div>
-        </section>
-
-        <!-- ============================================================
-             SCREEN 4: ERROR
-             ============================================================ -->
-        <section id="error" class="screen">
-            <div class="screen-inner">
-                <h1 class="brand-name brand-name--small">Silvera</h1>
-                <div class="error-icon">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2" fill="none" opacity="0.4"/>
-                        <line x1="22" y1="22" x2="42" y2="42" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-                        <line x1="42" y1="22" x2="22" y2="42" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-                    </svg>
-                </div>
-                <p id="error-text" class="error-screen-text">This gift doesn't exist.</p>
-                <p class="error-screen-sub">Please make sure you scanned the correct QR code.</p>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ============================================================
-         LIGHTBOX (Full-screen photo viewer)
-         ============================================================ -->
-    <div id="lightbox" class="lightbox">
-        <button id="lightbox-close" class="lightbox-close" aria-label="Close">&times;</button>
-        <img id="lightbox-img" src="" alt="Full size photo">
+            <audio id="audio-player" controls class="hidden"></audio>
+        </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="index.js"></script>
+    <script>
+        // رابط الـ Google Apps Script الخاص بك
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzfXoTdvST-GjKi772pzV7dUNSo7DKndEAogFAZGkyhtzpwVMOh4-Xdw-qLqLC8UOvY/exec"; 
+
+        let customerData = null;
+
+        // قراءة الـ ID من اللينك
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get('id');
+
+        if (customerId) {
+            fetch(`${SCRIPT_URL}?id=${customerId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && !data.error) {
+                        customerData = data;
+                    } else {
+                        console.error("Gift details not found!");
+                    }
+                })
+                .catch(err => console.error("Error fetching data:", err));
+        }
+
+        function checkPasscode() {
+            const inputDate = document.getElementById('passcode').value.trim();
+            
+            if (!customerData) {
+                document.getElementById('error-msg').innerText = "Loading data, please try again in a moment...";
+                return;
+            }
+
+            if (inputDate === customerData.date) {
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('gift-content').classList.remove('hidden');
+
+                document.getElementById('custom-message').innerText = customerData.message;
+
+                if (customerData.img1) {
+                    const img1 = document.getElementById('img1');
+                    img1.src = customerData.img1;
+                    img1.classList.remove('hidden');
+                }
+                if (customerData.img2) {
+                    const img2 = document.getElementById('img2');
+                    img2.src = customerData.img2;
+                    img2.classList.remove('hidden');
+                }
+                if (customerData.song || customerData.voice) {
+                    const audio = document.getElementById('audio-player');
+                    audio.src = customerData.song || customerData.voice;
+                    audio.classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('error-msg').innerText = "Incorrect date. Please try again.";
+            }
+        }
+    </script>
 </body>
 </html>
