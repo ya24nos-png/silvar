@@ -1,16 +1,16 @@
 /**
  * ============================================================
- * SILVERA QR GIFT EXPERIENCE — Main JavaScript
+ * SILVERA QR GIFT EXPERIENCE â€” Main JavaScript
  * ============================================================
  * Static site hosted on GitHub Pages.
  * Fetches data from a published Google Sheet (CSV export).
  * ============================================================
  */
 
-// ─── Configuration ──────────────────────────────────────────
+// â”€â”€â”€ Configuration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const CONFIG = {
   // Replace with your published Google Sheet CSV URL:
-  // Go to Google Sheets → File → Share → Publish to web → CSV
+  // Go to Google Sheets â†’ File â†’ Share â†’ Publish to web â†’ CSV
   // URL format: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/export?format=csv
   SHEET_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFHr3-8LF00Z2TP1HLDjUMFjvr0HnJiU5qg9h_0sYUrww3XXnm7B6cMyCFyet0DcDs1WOJ5yjz-WsC/pub?output=csv',
 
@@ -19,12 +19,12 @@ const CONFIG = {
   TYPEWRITER_SPEED: 38, // ms per character
 };
 
-// ─── State ──────────────────────────────────────────────────
+// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let giftData = null;
 let attempts = 0;
 let particlesInitialized = false;
 
-// ─── DOM Cache ──────────────────────────────────────────────
+// â”€â”€â”€ DOM Cache â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const $ = (id) => document.getElementById(id);
 
 const DOM = {
@@ -69,7 +69,7 @@ const DOM = {
   canvas: $('particles-canvas'),
 };
 
-// ─── Initialization ─────────────────────────────────────────
+// â”€â”€â”€ Initialization â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
@@ -79,7 +79,7 @@ async function init() {
 
   const id = new URLSearchParams(window.location.search).get('id');
 
-  // Sheet URL not configured (development mode — show demo)
+  // Sheet URL not configured (development mode â€” show demo)
   if (CONFIG.SHEET_URL === 'YOUR_GOOGLE_SHEET_CSV_URL_HERE') {
     giftData = getDemoData(id || 'demo');
     onDataReady();
@@ -119,12 +119,12 @@ function onDataReady() {
   }
 }
 
-// ─── Demo Data (for development/testing) ────────────────────
+// â”€â”€â”€ Demo Data (for development/testing) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function getDemoData(id) {
   return {
     id: id,
     date: '2024-02-14',
-    message: 'Every moment with you feels like a beautiful dream I never want to wake up from. You are my sunshine, my heart, my everything. Happy Anniversary, my love. Here\'s to a lifetime of us. ❤️',
+    message: 'Every moment with you feels like a beautiful dream I never want to wake up from. You are my sunshine, my heart, my everything. Happy Anniversary, my love. Here\'s to a lifetime of us. â¤ï¸',
     photo1: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&q=80',
     photo2: 'https://images.unsplash.com/photo-1529634597503-139d3726fed5?w=600&q=80',
     photo3: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80',
@@ -137,7 +137,7 @@ function getDemoData(id) {
   };
 }
 
-// ─── Screen Navigation ──────────────────────────────────────
+// â”€â”€â”€ Screen Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const allScreens = ['splash', 'unlock', 'reveal', 'error'];
 
 function showScreen(name) {
@@ -158,7 +158,7 @@ function showErrorScreen(title, subtitle) {
   showScreen('error');
 }
 
-// ─── Google Sheets Fetch & CSV Parse ────────────────────────
+// â”€â”€â”€ Google Sheets Fetch & CSV Parse â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function fetchSheetData() {
   const res = await fetch(CONFIG.SHEET_URL);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -168,7 +168,7 @@ async function fetchSheetData() {
 
 /**
  * Simple CSV parser that handles:
- * - Header row → keys
+ * - Header row â†’ keys
  * - Quoted fields (with commas inside)
  * - Double-escaped quotes ("")
  * - Empty fields
@@ -231,7 +231,7 @@ function parseCSVLine(line) {
   return fields;
 }
 
-// ─── Date Dropdowns ─────────────────────────────────────────
+// â”€â”€â”€ Date Dropdowns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function populateDateDropdowns() {
   if (!DOM.selectDay || !DOM.selectMonth || !DOM.selectYear) return;
 
@@ -255,7 +255,7 @@ function populateDateDropdowns() {
     DOM.selectMonth.appendChild(opt);
   });
 
-  // Years 2000–2030 (descending)
+  // Years 2000â€“2030 (descending)
   for (let y = 2030; y >= 2000; y--) {
     const opt = document.createElement('option');
     opt.value = String(y);
@@ -269,7 +269,7 @@ function populateDateDropdowns() {
   }
 }
 
-// ─── Unlock Logic ───────────────────────────────────────────
+// â”€â”€â”€ Unlock Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function handleUnlockSubmit(e) {
   e.preventDefault();
   if (!giftData) return;
@@ -353,7 +353,7 @@ function onUnlockFail() {
   }
 
   if (remaining <= 0) {
-    showUnlockError('Ask your special someone for a hint 💫');
+    showUnlockError('Ask your special someone for a hint ðŸ’«');
     if (DOM.unlockAttempts) DOM.unlockAttempts.textContent = '';
   } else {
     showUnlockError('That\'s not the right date. Try again.');
@@ -370,7 +370,7 @@ function showUnlockError(msg) {
   }
 }
 
-// ─── Reveal Screen ──────────────────────────────────────────
+// â”€â”€â”€ Reveal Screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /**
  * Maps the user's sheet columns to internal names.
@@ -401,16 +401,46 @@ function getPhotos() {
   // Try individual photo columns first (photo1, photo2, ...)
   const individual = [giftData.photo1, giftData.photo2, giftData.photo3, giftData.photo4, giftData.photo5]
     .filter(url => url && url.trim());
-  if (individual.length > 0) return individual;
+  if (individual.length > 0) return individual.map(toDirectImageUrl);
 
   // Try the combined "photo 1-5" column (comma or space separated URLs)
   const combined = giftData['photo 1-5'] || giftData['photos'] || '';
   if (combined.trim()) {
-    // Split by comma, newline, or space (but keep full URLs intact)
-    return combined.split(/[,\n]+/).map(u => u.trim()).filter(u => u.startsWith('http'));
+    return combined.split(/[,\n]+/).map(u => u.trim()).filter(u => u.startsWith('http')).map(toDirectImageUrl);
   }
 
   return [];
+}
+
+/**
+ * Converts various URL formats to direct image URLs:
+ * - Google Drive: drive.google.com/file/d/ID/... â†’ lh3.googleusercontent.com/d/ID
+ * - Google Drive open: drive.google.com/open?id=ID â†’ lh3.googleusercontent.com/d/ID
+ * - Already direct URLs: returned as-is
+ */
+function toDirectImageUrl(url) {
+  if (!url) return url;
+  url = url.trim();
+
+  // Google Drive: /file/d/FILE_ID/...
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveMatch) {
+    return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+  }
+
+  // Google Drive: /open?id=FILE_ID
+  const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (driveOpenMatch) {
+    return `https://lh3.googleusercontent.com/d/${driveOpenMatch[1]}`;
+  }
+
+  // Google Drive: export/download?id=FILE_ID
+  const driveExportMatch = url.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/);
+  if (driveExportMatch) {
+    return `https://lh3.googleusercontent.com/d/${driveExportMatch[1]}`;
+  }
+
+  return url;
 }
 
 function renderRevealScreen() {
@@ -487,7 +517,7 @@ function renderRevealScreen() {
   });
 }
 
-// ─── Media Helpers ──────────────────────────────────────────
+// â”€â”€â”€ Media Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function createMediaEmbed(url) {
   // YouTube
   const ytId = getYouTubeId(url);
@@ -542,7 +572,7 @@ function getSpotifyId(url, type) {
   return match ? match[1] : null;
 }
 
-// ─── Typewriter Effect ──────────────────────────────────────
+// â”€â”€â”€ Typewriter Effect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function typeWriter(element, text, speed = 40) {
   let i = 0;
   element.textContent = '';
@@ -561,7 +591,7 @@ function typeWriter(element, text, speed = 40) {
   tick();
 }
 
-// ─── Lightbox ───────────────────────────────────────────────
+// â”€â”€â”€ Lightbox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function setupLightbox() {
   if (!DOM.lightbox) return;
 
@@ -594,7 +624,7 @@ function setupLightbox() {
   });
 }
 
-// ─── Particle System ────────────────────────────────────────
+// â”€â”€â”€ Particle System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function initParticles() {
   const canvas = DOM.canvas;
   if (!canvas || particlesInitialized) return;
