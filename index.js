@@ -56,6 +56,8 @@ const DOM = {
   photoGallery:   $('photo-gallery'),
   musicSection:   $('music-section'),
   videoSection:   $('video-section'),
+  voiceSection:   $('voice-section'),
+  voicePlayer:    $('voice-player'),
 
   // Lightbox
   lightbox:      $('lightbox'),
@@ -388,6 +390,7 @@ function getField(name) {
     name_to: ['to', 'name_to'],
     song_url: ['song', 'song_url'],
     video_url: ['vedio', 'video', 'video_url'],
+    voice_url: ['voice', 'voice_url'],
   };
   if (aliases[name]) {
     for (const alt of aliases[name]) {
@@ -438,6 +441,29 @@ function toDirectImageUrl(url) {
   const driveExportMatch = url.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/);
   if (driveExportMatch) {
     return `https://lh3.googleusercontent.com/d/${driveExportMatch[1]}`;
+  }
+
+  return url;
+}
+
+/**
+ * Converts Google Drive URLs to direct audio URLs.
+ * For Google Drive: uses export/download format.
+ */
+function toDirectAudioUrl(url) {
+  if (!url) return url;
+  url = url.trim();
+
+  // Google Drive: /file/d/FILE_ID/...
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveMatch) {
+    return `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+  }
+
+  // Google Drive: /open?id=FILE_ID
+  const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (driveOpenMatch) {
+    return `https://drive.google.com/uc?export=download&id=${driveOpenMatch[1]}`;
   }
 
   return url;
@@ -509,6 +535,15 @@ function renderRevealScreen() {
     DOM.videoSection.style.display = 'none';
   }
 
+  // Voice Note
+  const voiceUrl = getField('voice_url');
+  if (voiceUrl && DOM.voicePlayer && DOM.voiceSection) {
+    DOM.voiceSection.style.display = '';
+    DOM.voicePlayer.src = toDirectAudioUrl(voiceUrl.trim());
+  } else if (DOM.voiceSection) {
+    DOM.voiceSection.style.display = 'none';
+  }
+
   // Staggered reveal animations
   const animEls = document.querySelectorAll('.reveal-animate');
   animEls.forEach((el, i) => {
@@ -555,6 +590,33 @@ function createMediaEmbed(url) {
     iframe.style.borderRadius = '12px';
     return iframe;
   }
+
+  // Google Drive Video
+  const driveId = getDriveFileId(url);
+  if (driveId) {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://drive.google.com/file/d/${driveId}/preview`;
+    iframe.allow = 'autoplay; encrypted-media';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    return iframe;
+  }
+
+  return null;
+}
+
+/**
+ * Extracts Google Drive file ID from various URL formats
+ */
+function getDriveFileId(url) {
+  const match1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match1) return match1[1];
+
+  const match2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (match2) return match2[1];
+
+  const match3 = url.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/);
+  if (match3) return match3[1];
 
   return null;
 }
