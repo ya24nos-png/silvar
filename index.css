@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SILVERA QR GIFT EXPERIENCE — LUXURY STYLESHEET
+   SILVERA QR GIFT EXPERIENCE â€” LUXURY STYLESHEET
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -616,6 +616,39 @@ body {
 .brand-accent {
   color: var(--accent);
   font-weight: 500;
+}
+
+/* Instagram Link */
+.instagram-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0.7rem 1.5rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: var(--radius-xl);
+  transition: all 0.3s ease;
+  text-transform: none;
+}
+
+.instagram-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(201, 169, 110, 0.08);
+  transform: translateY(-2px);
+}
+
+.instagram-link svg {
+  flex-shrink: 0;
+}
+
+.instagram-link span {
+  font-family: var(--font-body);
+  font-weight: 400;
 }
 
 /* --------------------------------------------------------------------------
